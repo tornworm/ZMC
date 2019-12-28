@@ -50,7 +50,7 @@ public class Msg_S2C_Controller : BaseController<Event>
     public override void OnUpdate()
     {
         //判断是否有事件和是否有监听者
-        if (EventQueue.Count > 0 && EventListeners.Count > 0)
+        if (EventQueue.Count > 0 )
         {
             //每一帧都从队头取出一个事件
             Event Current = EventQueue.Dequeue();

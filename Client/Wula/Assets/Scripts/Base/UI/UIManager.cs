@@ -2,95 +2,176 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-public class UIManager {
 
-    private volatile static UIManager singleton;
-    public static UIManager Singleton
+public enum UIPanelType
+{
+    PanelLoading,
+    PanelLogin
+}
+
+public enum PanelFrom
+{
+    Normal,
+    TOP,
+    Message,
+    Mask
+}
+
+public class UIManager : BaseManager<UIManager> 
+{
+    [System.Serializable]
+    public class View
     {
-        get { return singleton ?? (singleton = new UIManager()); }
+        public Transform _Normal;
+        public Transform _TOP;
+        public Transform _Message;
+        public Transform _Mask;
     }
-    private UIManager() { }
+    [System.Serializable]
+    public class Data
+    {
+        public Dictionary<UIPanelType, BasePanel> PanelCacheDic = new Dictionary<UIPanelType, BasePanel>();  // 加载过的UI 保存在内存中的预设集合
+        public List<BasePanel> CurPanels = new List<BasePanel>();  // 当前打开的所有panel
+        public Stack<BasePanel> messageBoxStack = new Stack<BasePanel>();   // 所有消息盒子
+    }
+
+    public Data data;
+    public View view;
+
     /// <summary>
     /// 打开UI界面
     /// </summary>
     /// <param name="name"></param>
-    public void OpenWindow(string name)
+    public void ShowPanel(UIPanelType panelType, PanelFrom panelFrom, params object[] args)
     {
-              
-        if (GameObject.Find(name) != null)
+        BasePanel prefab;
+        data.PanelCacheDic.TryGetValue(panelType,out prefab);
+        #region  获取内存中加载预设
+        if (prefab == null)
         {
-            return;
-
+            ResourcesManager.Instance.LoadAssetsByKey<GameObject>(panelType.ToString(), (result) =>
+            {
+                BasePanel basePanel = result.GetComponent<BasePanel>();
+                data.PanelCacheDic.Add(panelType, basePanel);
+                LoadPanel(basePanel, panelFrom, args);
+            });
         }
-        GameObject tmp = Object.Instantiate(Resources.Load("Prefabs/UI/" + name)) as GameObject;
-    }
-    /// <summary>
-    /// 打开UI界面,可关闭其他界面
-    /// </summary>
-    /// <param name="name"></param>
-    /// <param name="closeAll"></param>
-    public void OpenWindow(string name, bool closeAll)
-    {
-     
-        if (!closeAll)
-            return;
-
+        #endregion
         else
         {
-            foreach (var item in GameObject.FindGameObjectsWithTag("UI"))
-            {
-                Object.Destroy(item);
-            }
+            LoadPanel(prefab, panelFrom, args);
         }
-        if (GameObject.Find(name) != null)
-            return;
-        GameObject tmp = Object.Instantiate(Resources.Load("Prefabs/UI/" + name)) as GameObject;
+
+
+        void LoadPanel(BasePanel panelPrefab,PanelFrom panelFrom1, object[] args_)
+        {
+            BasePanel panel = GameObject.Instantiate(panelPrefab, GetFromParent(panelFrom), false);
+            panel.transform.localScale = Vector3.one;
+            data.CurPanels.Add(panel);
+            panel.OnEnter(args_);
+        }
     }
+   
     /// <summary>
     ///  关闭UI界面
     /// </summary>
     /// <param name="name"></param>
-    public void CloseWindow(string name)
+    public void ClosePanel(UIPanelType panelType)
     {
-       
-        if (GameObject.Find(name + "(Clone)") == null)
-            return;
-        Object.Destroy(GameObject.Find(name + "(Clone)"));
+        BasePanel panel = GetPanel(panelType);
+        if(panel)
+        {
+            panel.OnExit();
+            data.CurPanels.Remove(panel);
+        }
+        else
+        {
+            Debug.LogError("ClosePanel 找不到此panel");
+        }
     }
+
     /// <summary>
-    ///  关闭当前UI界面
+    /// 根据PanelFrom枚举得到具体挂载父物体对象
     /// </summary>
-    /// <param name="name"></param>
-    public void CloseSelf(string name)
+    public Transform GetFromParent(PanelFrom panelFrom)
     {
-       
-        if (GameObject.Find(name) == null)
-            return;
-        Object.Destroy(GameObject.Find(name));
+        switch (panelFrom)
+        {
+            case PanelFrom.Normal: return view._Normal;
+            case PanelFrom.TOP: return view._TOP;
+            case PanelFrom.Message: return view._Message;
+            case PanelFrom.Mask: return view._Mask;
+            default: return null;
+        }
     }
+
     /// <summary>
     ///  隐藏UI界面
     /// </summary>
     /// <param name="name"></param>
-    public void HintWindow(string name)
+    public void HintPanel(UIPanelType panelType)
     {
+        BasePanel panel = GetPanel(panelType);
+        if (panel)
+        {
+            panel.gameObject.SetActive(false);
+        }
+        else
+        {
+            Debug.LogError("HintPanel 找不到此panel");
+        }
 
-     
-        if (GameObject.Find(name + "(Clone)") == null)
-            return;
-        GameObject.Find(name + "(Clone)").SetActive(false);
     }
     /// <summary>
     ///  打开隐藏的UI界面
     /// </summary>
     /// <param name="name"></param>
-    public void ShowWindow(string name)
+    public void ActivePanel(UIPanelType panelType)
     {
-       
+        BasePanel panel = GetPanel(panelType);
+        if (panel)
+        {
+            panel.gameObject.SetActive(true);
+        }
+        else
+        {
+            Debug.LogError("ActivePanel 找不到此panel");
+        }
+    }
 
-        if (GameObject.Find(name + "(Clone)") == null)
-            return;
-        GameObject.Find(name + "(Clone)").SetActive(true);
+
+    /// <summary>
+    /// 获取当前正在Hierarchy面板的panel
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public BasePanel GetPanel<T>()
+    {
+        foreach (var panel in data.CurPanels)
+        {
+            if(panel is T)
+            {
+                return panel;
+            }
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// 获取当前正在Hierarchy面板的panel
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public BasePanel GetPanel(UIPanelType panelType)
+    {
+        foreach (var panel in data.CurPanels)
+        {
+            if (panel.thisUIType == panelType)
+            {
+                return panel;
+            }
+        }
+        return null;
     }
 
     /// <summary>
@@ -144,16 +225,7 @@ public class UIManager {
         GameObject tmp = Object.Instantiate(Resources.Load("Prefab/UI/UI_TextBox")) as GameObject;
         tmp.GetComponent<UI_TextBox>().textStr = text;
     }
-    /// <summary>
-    /// 得到品质图片
-    /// </summary>
-    /// <param name="level"></param>
-    /// <returns></returns>
-    public Sprite GetLevelImage(int level)
-    {
-        
-        return Resources.Load<Sprite>("Textures/UI/common/item_color_0" + level);
-    }
+
     /// <summary>
     /// 播放序列帧动画
     /// </summary>

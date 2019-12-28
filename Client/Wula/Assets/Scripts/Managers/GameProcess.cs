@@ -11,7 +11,9 @@ public class GameProcess : MonoBehaviour
     public NetworkManager NetworkMgr;
     public ClientManager ClientManager;
     public MessageManager MessageMgr;
-    public bool beginUpdate = false;
+    public UIManager UIMgr;
+    public ResourcesManager resourcesMgr;
+    bool beginUpdate = false;
 
     private void Awake()
     {
@@ -26,9 +28,14 @@ public class GameProcess : MonoBehaviour
 
         yield return MessageMgr.StartCoroutine(MessageMgr.OnAwake());
 
+        yield return UIMgr.StartCoroutine(UIMgr.OnAwake());
+
+        yield return resourcesMgr.StartCoroutine(resourcesMgr.OnAwake());
+
         beginUpdate = true;
         yield return null;
-        SceneManager.LoadSceneAsync("Main");
+        SceneManager.LoadSceneAsync("Login");
+        UIManager.Instance.ShowPanel(UIPanelType.PanelLogin, PanelFrom.Normal);
     }
 
     private void Update()

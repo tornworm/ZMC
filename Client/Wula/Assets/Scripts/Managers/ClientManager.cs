@@ -36,16 +36,55 @@ public class ClientManager : BaseManager<ClientManager>
     {
         Socket clientSocket = ar.AsyncState as Socket;
         int count = clientSocket.EndReceive(ar);
-        //显示服务器给你发送的消息
-       Debug.Log(System.Text.Encoding.UTF8.GetString(dataBuffer, 0, count));
+        //服务器给你发送的消息
+        string data = System.Text.Encoding.UTF8.GetString(dataBuffer, 0, count);
 
-        //回调该方法
+        //客户端解析服务器响应数据，并发送到主线程消息队列
+        AnalysisAndSendClient(data);
+
+        //回调重新监听该方法
         clientSocket.BeginReceive(dataBuffer, 0, 1024, SocketFlags.None, ReceiveCallback, clientSocket);
     }
 
-    // data:协议号&协议 用&分割
+
+    /// <summary>
+    /// 向服务器发送请求
+    /// </summary>
+    // data:协议号&协议数据 用&分割
     public void Send(string data)
     {
         clientSocket.Send(System.Text.Encoding.UTF8.GetBytes(data));
+    }
+
+
+    public static void AnalysisAndSendClient(string data)
+    {
+        // 解析响应数据 返回响应数据包
+        Event @event = AnalysisString(data);
+        // 将解析好的数据包放入消息队列里
+        MessageManager.Instance.Msg_S2C_Controller.PushEvent(@event);
+    }
+
+    /// <summary>
+    /// 解析响应数据 返回响应封装类
+    /// </summary>
+    /// <param name="data"></param>
+    /// <returns></returns>
+    static Event AnalysisString(string data)
+    {
+        string[] dataArr = data.Split('&');
+        int eventID = int.Parse(dataArr[0]);
+        string content = dataArr[1];
+        Event @event = new Event(eventID, content);
+        if ('1' == dataArr[0][1])  // json
+        {
+            @event.analysisType = Event.AnalysisType.JsonString;
+        }
+        if ('0' == dataArr[0][1])  // 字符串
+        {
+            @event.analysisType = Event.AnalysisType.NorString;
+        }
+        return @event;
+
     }
 }

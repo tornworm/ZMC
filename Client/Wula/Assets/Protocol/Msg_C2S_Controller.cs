@@ -19,7 +19,6 @@ public class Request
     {
         this.requestID = (int)requestID;
         data = JsonConvert.SerializeObject(jsonObj);
-        Debug.Log(data);
     }
 }
 
