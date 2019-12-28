@@ -1,18 +1,26 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseController : MonoBehaviour
+public class BaseController<T> : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    protected Queue<T> EventQueue;
+
+    protected Dictionary<int, Action<T>> EventListeners;
+
+    public virtual void OnInit() { }
+
+    public virtual void OnUpdate() { }
+
+    public virtual void AddListener(int eventID, Action<T> arg) { }
+
+    public virtual void AddListener(Protocol_S2C protocol, Action<T> arg) { }
+
+    public virtual void RemoveListener(int eventID, Action<T> arg) { }
+
+    public virtual void RemoveListener(Protocol_S2C protocol, Action<T> arg) { }
+
+    public virtual void PushEvent(T arg) { }
 }

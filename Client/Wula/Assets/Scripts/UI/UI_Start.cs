@@ -42,7 +42,7 @@ public class UI_Start : UIBehaviour
         Event @event = new Event();
         @event.EventID = 10001;
         @event.EventParamObj = int.Parse(account.text);
-        SendController.Singleton.PushEvent(@event);
+        //Msg_S2C_Controller.Singleton.PushEvent(@event);
         //跳转加载场景
         UnityEngine.SceneManagement.SceneManager.LoadScene(1);
     }
