@@ -16,3 +16,6 @@ obj/
 Obj/
 Logs/
 
+Client/Wula/Packages/manifest.json
+Client/Wula/.vs/Wula/v16/Server/sqlite3/storage.ide-shm
+Client/Wula/.vs/Wula/v16/Server/sqlite3/storage.ide-wal
