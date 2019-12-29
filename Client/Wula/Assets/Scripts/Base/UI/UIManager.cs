@@ -5,8 +5,10 @@ using UnityEngine.UI;
 
 public enum UIPanelType
 {
+    None,
     PanelLoading,
-    PanelLogin
+    PanelLogin,
+    PanelMain
 }
 
 public enum PanelFrom
@@ -17,6 +19,10 @@ public enum PanelFrom
     Mask
 }
 
+
+/// <summary>
+/// UI管理器  (当前全部UI类型为透视效果3DUI)
+/// </summary>
 public class UIManager : BaseManager<UIManager> 
 {
     [System.Serializable]
@@ -147,7 +153,7 @@ public class UIManager : BaseManager<UIManager>
     /// <returns></returns>
     public BasePanel GetPanel<T>()
     {
-        foreach (var panel in data.CurPanels)
+        foreach (BasePanel panel in data.CurPanels)
         {
             if(panel is T)
             {
@@ -160,11 +166,9 @@ public class UIManager : BaseManager<UIManager>
     /// <summary>
     /// 获取当前正在Hierarchy面板的panel
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
     public BasePanel GetPanel(UIPanelType panelType)
     {
-        foreach (var panel in data.CurPanels)
+        foreach (BasePanel panel in data.CurPanels)
         {
             if (panel.thisUIType == panelType)
             {

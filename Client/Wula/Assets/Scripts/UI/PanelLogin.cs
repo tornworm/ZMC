@@ -57,7 +57,7 @@ public class PanelLogin : BasePanel
     {
         OnRequestLogin_Success_S2C protoCol = @event.GetObj<OnRequestLogin_Success_S2C>();
         Debug.LogWarning("    name:" + protoCol.name + "   goldCount:" + protoCol.goldCount + "    heroCount:" + protoCol.heroCount + "    vipLevel:" + protoCol.vipLevel);
-        SceneManager.LoadSceneAsync("Main");
+        GameSceneManager.Instance.LoadSceneShowLoadingAsync("Main", () => UIManager.Instance.ShowPanel(UIPanelType.PanelMain, PanelFrom.Normal));
         UIManager.Instance.ClosePanel(UIPanelType.PanelLogin);
         UIManager.Instance.CreatHintBox("登陆成功!!!");
     }
@@ -65,6 +65,6 @@ public class PanelLogin : BasePanel
     public override void OnExit()
     {
         base.OnExit();
-        Destroy(this);
+        Destroy(gameObject);
     }
 }

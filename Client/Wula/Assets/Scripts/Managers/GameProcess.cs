@@ -13,6 +13,7 @@ public class GameProcess : MonoBehaviour
     public MessageManager MessageMgr;
     public UIManager UIMgr;
     public ResourcesManager resourcesMgr;
+    public GameSceneManager gameSceneMgr;
     bool beginUpdate = false;
 
     private void Awake()
@@ -32,10 +33,10 @@ public class GameProcess : MonoBehaviour
 
         yield return resourcesMgr.StartCoroutine(resourcesMgr.OnAwake());
 
+        yield return gameSceneMgr.StartCoroutine(gameSceneMgr.OnAwake());
+
         beginUpdate = true;
-        yield return null;
-        SceneManager.LoadSceneAsync("Login");
-        UIManager.Instance.ShowPanel(UIPanelType.PanelLogin, PanelFrom.Normal);
+        gameSceneMgr.LoadSceneShowLoadingAsync("Login", () => UIManager.Instance.ShowPanel(UIPanelType.PanelLogin, PanelFrom.Normal));
     }
 
     private void Update()
@@ -46,6 +47,9 @@ public class GameProcess : MonoBehaviour
         NetworkMgr.OnUpdate();
         ClientManager.OnUpdate();
         MessageMgr.OnUpdate();
+        UIMgr.OnUpdate();
+        resourcesMgr.OnUpdate();
+        gameSceneMgr.OnUpdate();
     }
 
     void InitManagers()

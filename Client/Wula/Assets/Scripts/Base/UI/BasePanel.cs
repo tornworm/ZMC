@@ -3,9 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
+public interface IUIData
+{
+    void OnInit();
+}
+
+public interface IUIView
+{
+    void OnInit();
+}
+
 public class BasePanel : MonoBehaviour
 {
-    public UIPanelType thisUIType;
+    public UIPanelType thisUIType = UIPanelType.None;
 
     public virtual void OnInit()
     {

@@ -814,7 +814,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53d92ebddb91fc542bee7f9c82d613fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thisUIType: 1
+  thisUIType: 2
   randomBtn: {fileID: 4495410141549852355}
   startBtn: {fileID: 3927673381881219714}
   account: {fileID: 181088522094977623}
