@@ -104,8 +104,7 @@ public class DataBaseManager : Single<DataBaseManager>
     }
     public void Insert()
     {
-        var ss = from r in db.Am_recProScheme
-                 select r;
+        
     }
 }
 
