@@ -44,7 +44,6 @@ public class PanelLogin : BasePanel
 
     }
 
-    void OnLoginSuccess(Event @event)
     void OnLoginSuccess(ServerEvent @event)
     {
         OnRequestLogin_Success_S2C protoCol = @event.GetObj<OnRequestLogin_Success_S2C>();
