@@ -42,15 +42,15 @@ public class PanelLogin : BasePanel
         Request request = new Request(Protocol_C2S.OnRequestLogin, protoCol_c2s);
         NetworkManager.Instance.Send(request);
 
-        //服务器收到请求，处理请求后发给客户端
-        OnRequestLogin_Success_S2C protoCol_s2c = new OnRequestLogin_Success_S2C();
-        protoCol_s2c.name = "橐文";
-        protoCol_s2c.heroCount = 10;
-        protoCol_s2c.vipLevel = 1;
-        protoCol_s2c.goldCount = 99999;
-        string json = JsonTool.Serialize(protoCol_s2c);
-        string response = (int)Protocol_S2C.OnLogin_Success+"&" + json;
-        ClientManager.AnalysisAndSendClient(response);
+        ////服务器收到请求，处理请求后发给客户端
+        //OnRequestLogin_Success_S2C protoCol_s2c = new OnRequestLogin_Success_S2C();
+        //protoCol_s2c.name = "橐文";
+        //protoCol_s2c.heroCount = 10;
+        //protoCol_s2c.vipLevel = 1;
+        //protoCol_s2c.goldCount = 99999;
+        //string json = JsonTool.Serialize(protoCol_s2c);
+        //string response = (int)Protocol_S2C.OnLogin_Success+"&" + json;
+        //ClientManager.AnalysisAndSendClient(response);
     }
 
     void OnLoginSuccess(Event @event)

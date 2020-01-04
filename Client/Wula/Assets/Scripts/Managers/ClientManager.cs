@@ -17,9 +17,9 @@ public class ClientManager : BaseManager<ClientManager>
         //初始化sokect,选择tcp
         clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         //服务器地址
-        IPAddress ipAddress = IPAddress.Parse("192.168.199.193");
+        IPAddress ipAddress = IPAddress.Parse("47.92.205.66");
         //服务器应用程序端口号
-        IPEndPoint iPEndPoint = new IPEndPoint(ipAddress, 2345);
+        IPEndPoint iPEndPoint = new IPEndPoint(ipAddress, 8888);
         //绑定IP和端口号
         clientSocket.Connect(iPEndPoint);
 
@@ -38,7 +38,7 @@ public class ClientManager : BaseManager<ClientManager>
         int count = clientSocket.EndReceive(ar);
         //服务器给你发送的消息
         string data = System.Text.Encoding.UTF8.GetString(dataBuffer, 0, count);
-
+        Debug.Log("服务器数据：" + data);
         //客户端解析服务器响应数据，并发送到主线程消息队列
         AnalysisAndSendClient(data);
 

@@ -8,7 +8,8 @@ public enum UIPanelType
     None,
     PanelLoading,
     PanelLogin,
-    PanelMain
+    PanelMain,
+    PanelChooseRole
 }
 
 public enum PanelFrom
