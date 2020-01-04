@@ -56,5 +56,11 @@ public class GameProcess : MonoBehaviour
     {
 
     }
+
+    private void OnDestroy()
+    {
+        Request request = new Request(Protocol_C2S.OnClientExit, "Exit");
+        NetworkMgr.Send(request);
+    }
 }
 

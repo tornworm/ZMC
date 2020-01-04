@@ -24,6 +24,8 @@ public class Common : MonoBehaviour
 public enum Protocol_C2S
 {
     OnRequestLogin = 0110001,  
+
+    OnClientExit = 0099999,
 }
 
 public enum Protocol_S2C

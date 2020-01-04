@@ -17,9 +17,9 @@ public class ClientManager : BaseManager<ClientManager>
         //初始化sokect,选择tcp
         clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         //服务器地址
-        IPAddress ipAddress = IPAddress.Parse("192.168.199.193");
+        IPAddress ipAddress = IPAddress.Parse("47.92.205.66");
         //服务器应用程序端口号
-        IPEndPoint iPEndPoint = new IPEndPoint(ipAddress, 2345);
+        IPEndPoint iPEndPoint = new IPEndPoint(ipAddress, 8888);
         //绑定IP和端口号
         clientSocket.Connect(iPEndPoint);
 
@@ -39,6 +39,7 @@ public class ClientManager : BaseManager<ClientManager>
         //服务器给你发送的消息
         string data = System.Text.Encoding.UTF8.GetString(dataBuffer, 0, count);
 
+        Debug.LogWarning("data" + data);
         //客户端解析服务器响应数据，并发送到主线程消息队列
         AnalysisAndSendClient(data);
 
@@ -60,7 +61,7 @@ public class ClientManager : BaseManager<ClientManager>
     public static void AnalysisAndSendClient(string data)
     {
         // 解析响应数据 返回响应数据包
-        Event @event = AnalysisString(data);
+        ServerEvent @event = AnalysisString(data);
         // 将解析好的数据包放入消息队列里
         MessageManager.Instance.Msg_S2C_Controller.PushEvent(@event);
     }
@@ -70,19 +71,19 @@ public class ClientManager : BaseManager<ClientManager>
     /// </summary>
     /// <param name="data"></param>
     /// <returns></returns>
-    static Event AnalysisString(string data)
+    static ServerEvent AnalysisString(string data)
     {
         string[] dataArr = data.Split('&');
         int eventID = int.Parse(dataArr[0]);
         string content = dataArr[1];
-        Event @event = new Event(eventID, content);
+        ServerEvent @event = new ServerEvent(eventID, content);
         if ('1' == dataArr[0][1])  // json
         {
-            @event.analysisType = Event.AnalysisType.JsonString;
+            @event.analysisType = ServerEvent.AnalysisType.JsonString;
         }
         if ('0' == dataArr[0][1])  // 字符串
         {
-            @event.analysisType = Event.AnalysisType.NorString;
+            @event.analysisType = ServerEvent.AnalysisType.NorString;
         }
         return @event;
 
