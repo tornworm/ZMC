@@ -18,12 +18,13 @@ public class Common : MonoBehaviour
 }
 
 /// <summary>
-/// [0] ? s2c : c2s
-/// [1] ? json : norString
+/// [0] ? c2s : s2c
+/// [1] ? norString : json
 /// </summary>
 public enum Protocol_C2S
 {
     OnRequestLogin = 0110001,  
+    OnRequestRegister=0110002,
 
     OnClientExit = 0099999,
 }
@@ -31,6 +32,10 @@ public enum Protocol_C2S
 public enum Protocol_S2C
 {
     OnLogin_Success = 1110001,
+    LoginUserOnline = 1010002,//账号正在游戏中
+    LoginUsernameNotExist = 1010003,//账号不存在
+    LoginUsernameOrPasswordWrong = 1010004,//密码错误
+    OnRequestRegister_Success=1110005,
 }
 
 

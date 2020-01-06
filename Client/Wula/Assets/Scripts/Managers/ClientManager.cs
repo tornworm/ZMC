@@ -17,7 +17,8 @@ public class ClientManager : BaseManager<ClientManager>
         //初始化sokect,选择tcp
         clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         //服务器地址
-        IPAddress ipAddress = IPAddress.Parse("47.92.205.66");
+        //IPAddress ipAddress = IPAddress.Parse("47.92.205.66");
+        IPAddress ipAddress = IPAddress.Parse("127.0.0.1");
         //服务器应用程序端口号
         IPEndPoint iPEndPoint = new IPEndPoint(ipAddress, 8888);
         //绑定IP和端口号
