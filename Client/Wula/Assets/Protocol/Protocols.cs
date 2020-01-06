@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class OnRequestLogin_C2S
+public class AdimBase
 {
-    public int accountID;
+    public string accountID;
+    public string password;
 }
 
 public class OnRequestLogin_Success_S2C
