@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -56,11 +57,27 @@ public class GameProcess : MonoBehaviour
     {
 
     }
-
-    private void OnDestroy()
+    private void OnApplicationQuit()
     {
-        Request request = new Request(Protocol_C2S.OnClientExit, "Exit");
-        NetworkMgr.Send(request);
+
+        Request request = new Request(Protocol_C2S.OnClientExit, "f");
+        // NetworkManager.Instance.Send(request);
+        StringBuilder stringBuilder = new StringBuilder();
+        //消息处理
+        stringBuilder
+        .Append(request.requestID.ToString())
+        .Append("&")
+        .Append(request.data);
+
+        ClientManager.Instance.Send(stringBuilder.ToString());
+        stringBuilder.Length = 0;
+#if UNITY_EDITOR
+
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+                            Application.Quit();
+#endif
     }
+   
 }
 

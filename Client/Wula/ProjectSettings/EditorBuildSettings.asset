@@ -9,11 +9,14 @@ EditorBuildSettings:
     path: Assets/Scenes/Login.unity
     guid: 503cc3d0199ad4a47bda16107fae2b1b
   - enabled: 1
-    path: Assets/Scenes/Loading.unity
-    guid: c09d576e5749c7540bd5cb74dd4e025e
-  - enabled: 1
     path: Assets/Scenes/Main.unity
     guid: d4e9f5109c3e16e4eab74e61d8d5c8eb
+  - enabled: 1
+    path: Assets/Scenes/Begin.unity
+    guid: 5a731d41404917744a72f919f74bab16
+  - enabled: 1
+    path: Assets/Scenes/ChooseRole.unity
+    guid: 32f58ab791a8ce5469039bc61af6cd56
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 707ca59d75e32574aa4e926f437437b7,
       type: 2}

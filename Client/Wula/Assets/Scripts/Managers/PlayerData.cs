@@ -9,19 +9,24 @@ namespace Assets.Scripts.Managers
     public class PlayerData
     {
         private static PlayerData instance;
-        private PlayerData() { }
+        private PlayerData() {
+            actorList = new List<Actor>();
+        }
         public static PlayerData Instance
         {
             get{
                 if (instance==null)
                 {
-                    instance = new PlayerData();
+                    instance = new PlayerData();                   
                 }
                 return instance;
             }
         }
-
+        public List<Actor> actorList;
         public int UserID { get; set; }
-        public int Name { get; set; }
+        public string Name { get; set; }
+        public string gender { get; set; }
+        public int roleId { get; set; }
+        public int Lv { get; set; }
     }
 }

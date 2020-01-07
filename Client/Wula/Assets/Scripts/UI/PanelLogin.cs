@@ -11,8 +11,8 @@ public class PanelLogin : BasePanel
     public Button rigsterBtn;
     public InputField inputID;
     public InputField password;
-    private readonly string strID = @"/^[1-9]{1}[0-9]{4,11}$/";
-    private readonly string strPw = @"/^[0-9a-zA-Z]{6,12}$/";
+    private string strID = @"^[-]?\d*$";
+    private string strPw = @"^[0-9]?\d+[a-zA-Z]?\d*$";
     public override void OnEnter(object[] args)
     {
         base.OnEnter(args);
@@ -22,16 +22,16 @@ public class PanelLogin : BasePanel
         loginBtn.onClick.AddListener(signIn);
         inputID.onValueChanged.AddListener((msg) =>
         {
-            Regex regex = new Regex(strID);
-            if (regex.IsMatch(msg))
+     
+            if (!Regex.IsMatch(msg, @"^[-]?\d*$"))
             {
                 UIManager.Instance.CreatHintBox("账号只能为数字");
             }
         });
         password.onValueChanged.AddListener(msg =>
         {
-            Regex regex = new Regex(strPw);
-            if (regex.IsMatch(msg))
+            
+            if (!Regex.IsMatch(msg, @"^[0-9]?\d+[a-zA-Z]?\d*$"))
             {
                 UIManager.Instance.CreatHintBox("密码只能为数字或字母");
             }
@@ -43,12 +43,29 @@ public class PanelLogin : BasePanel
     /// </summary>
     private void OnClickBtnRegister()
     {
-       
-        if (inputID.text==""&& password.text==""&& password.text=="")
+
+        if (inputID.text == "" && password.text == "")
         {
             UIManager.Instance.CreatHintBox("账号密码不能为空!!!!");
             return;
-        }      
+        }
+        if (inputID.text.Length<7||inputID.text.Length>10)
+        {
+            UIManager.Instance.CreatHintBox("账号为7-10位!!!!");
+            return;
+        }
+        if (password.text.Length >20 )
+        {
+            UIManager.Instance.CreatHintBox("密码太长!!!!");
+            return;
+        }
+        Regex regex = new Regex(strID);
+        Regex regexpw = new Regex(strPw);
+        if (!regex.IsMatch(inputID.text)|| !regexpw.IsMatch(password.text))
+        {
+            UIManager.Instance.CreatHintBox("账号只能为数字");
+            return;
+        }
         AdimBase adimBase = new AdimBase();
         adimBase.accountID = inputID.text;
         adimBase.password = password.text;
@@ -67,7 +84,7 @@ public class PanelLogin : BasePanel
         else if (adimBase.password=="1")
         {
             PlayerData.Instance.UserID = int.Parse(adimBase.accountID);
-            GameSceneManager.Instance.LoadSceneShowLoadingAsync("Main", () => UIManager.Instance.ShowPanel(UIPanelType.PanelMain, PanelFrom.Normal));
+            GameSceneManager.Instance.LoadSceneShowLoadingAsync("ChooseRole", () => UIManager.Instance.ShowPanel(UIPanelType.PanelActor, PanelFrom.Normal));
             UIManager.Instance.ClosePanel(UIPanelType.PanelLogin);
             UIManager.Instance.CreatHintBox("注册成功!!!");
         }
@@ -76,9 +93,16 @@ public class PanelLogin : BasePanel
     {
 
         //如果账号规格不符
-        if (inputID.text == "" && password.text == "" && password.text == "")
+        if (inputID.text == "" && password.text == "")
         {
             UIManager.Instance.CreatHintBox("账号密码不能为空!!!!");
+            return;
+        }
+        Regex regex = new Regex(strID);
+        Regex regexpw = new Regex(strPw);
+        if (!regex.IsMatch(inputID.text) || !regexpw.IsMatch(password.text))
+        {
+            UIManager.Instance.CreatHintBox("账号只能为数字");
             return;
         }
         // 客户端发送登陆请求
@@ -110,9 +134,10 @@ public class PanelLogin : BasePanel
             return;
         }
         PlayerData.Instance.UserID = int.Parse(adimBase.accountID);
-        GameSceneManager.Instance.LoadSceneShowLoadingAsync("Main", () => UIManager.Instance.ShowPanel(UIPanelType.PanelMain, PanelFrom.Normal));
-        UIManager.Instance.ClosePanel(UIPanelType.PanelLogin);
         UIManager.Instance.CreatHintBox("登陆成功!!!");
+        GameSceneManager.Instance.LoadSceneShowLoadingAsync("ChooseRole", () => UIManager.Instance.ShowPanel(UIPanelType.PanelActor, PanelFrom.Normal));
+        UIManager.Instance.ClosePanel(UIPanelType.PanelLogin);
+        
     }
 
     public override void OnExit()
