@@ -25,8 +25,6 @@ public class HeroFightment : BaseFightment
 {
     HeroBehaviour heroBehaviour;
 
-    public Dictionary<>
-
     public override void OnInit(BaseCharacter character)
     {
         base.OnInit(character);
