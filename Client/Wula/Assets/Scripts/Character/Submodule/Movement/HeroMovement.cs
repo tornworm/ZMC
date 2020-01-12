@@ -39,6 +39,10 @@ public class HeroMovement : BaseMovement
         }
     }
 
+
+    /// <summary>
+    /// 角色转向
+    /// </summary>
     public override void TurnTo()
     {
         base.TurnTo();
@@ -57,6 +61,10 @@ public class HeroMovement : BaseMovement
         }
     }
 
+
+    /// <summary>
+    /// 转向计算
+    /// </summary>
     public virtual void UpdateTargetDirection()
     {
         turnSpeedMultiplier = 1f;

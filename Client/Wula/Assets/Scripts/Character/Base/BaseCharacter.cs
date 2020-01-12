@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class BaseCharacter : BaseActor
 {
-     /// <summary>
-     /// 碰撞体
-     /// </summary>
+    /// <summary>
+    /// 碰撞体
+    /// </summary>
     protected CapsuleCollider m_CapsuleCol;
 
 
@@ -37,6 +37,7 @@ public class BaseCharacter : BaseActor
     public override void Update()
     {
         base.Update();
+        ImitationGravity();
     }
 
     public override void OnDestroy()
@@ -116,9 +117,21 @@ public class BaseCharacter : BaseActor
     /// <param name="numEffId"></param>        
     public virtual void SelfDamage(float damage, float resultHp, int effId, int numEffId)
     {
-        
+
     }
 
+
+    /// <summary>
+    /// 模拟重力
+    /// </summary>
+    public virtual void ImitationGravity()
+    {
+        if (!characterController.isGrounded)
+        {
+            characterController.Move(Vector3.down);
+        }
+
+    }
 }
 
 
