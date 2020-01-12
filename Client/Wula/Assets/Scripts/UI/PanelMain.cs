@@ -35,6 +35,7 @@ public class PanelMain : BasePanel
     public override void OnEnter(object[] args)
     {
         base.OnEnter(args);
+        transform.root.gameObject.SetActive(false);            
     }
 
     public override void OnExit()

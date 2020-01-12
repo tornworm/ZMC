@@ -21,6 +21,10 @@ MonoBehaviour:
     m_Address: PanelLogin
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: b3e0a51a5055768449d792e8733feb8f
+    m_Address: PanelActor
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   - m_GUID: d731159409defff4abf7f1dbd584c383
     m_Address: PanelLoading
     m_ReadOnly: 0
